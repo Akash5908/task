@@ -25,7 +25,6 @@ const Disperse = () => {
       return { address, amount: amount, line: index + 1 };
     });
 
-
     setSplitData(tempSplitData);
   }, [inputValue]);
 
@@ -69,7 +68,7 @@ const Disperse = () => {
 
   const handleCombineBalances = (index) => {
     const combinedData = [];
-    let counter = 1
+    let counter = 1;
 
     for (let previous = 0; previous < splitdata.length; previous++) {
       for (let current = previous + 1; current < splitdata.length; current++) {
@@ -86,7 +85,7 @@ const Disperse = () => {
       combinedData.push({
         address: splitdata[previous].address,
         amount: splitdata[previous].amount,
-        line:counter++, // Include the line index
+        line: counter++, // Include the line index
       });
     }
     setShowbutton(false);
@@ -94,7 +93,7 @@ const Disperse = () => {
   };
   const KeepFirstOne = () => {
     const filteredData = [];
-    let counter = 1
+    let counter = 1;
     for (let previous = 0; previous < splitdata.length; previous++) {
       for (let current = previous + 1; current < splitdata.length; current++) {
         if (splitdata[previous].address === splitdata[current].address) {
@@ -107,7 +106,7 @@ const Disperse = () => {
       filteredData.push({
         address: splitdata[previous].address,
         amount: splitdata[previous].amount,
-        line:counter++, // Include the line index
+        line: counter++, // Include the line index
       });
     }
     setShowbutton(false);
@@ -143,7 +142,9 @@ const Disperse = () => {
             value={
               splitdata.length > 0
                 ? splitdata
-                    .map((item) => `${item.line}) ${item.address} ${item.amount}`)
+                    .map(
+                      (item) => `${item.line}) ${item.address} ${item.amount}`
+                    )
                     .join("\n")
                 : inputValue
             }

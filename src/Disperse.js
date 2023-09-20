@@ -62,7 +62,7 @@ const Disperse = () => {
     }
   };
 
-  const handleCombineBalances = (index) => {
+  const handleCombineBalances = () => {
     const combinedData = [];
     let counter = 1;
 
@@ -98,7 +98,7 @@ const Disperse = () => {
           current--; // Adjust the loop index since we removed an element
         }
       }
-      // Push non-duplicate items to combinedData
+      // Push non-duplicate items to filteredData
       filteredData.push({
         address: splitdata[previous].address,
         amount: splitdata[previous].amount,
@@ -147,35 +147,40 @@ const Disperse = () => {
               ))}
             </span>
             <textarea
-              cols={5}
-              style={{
-                width: "100%",
-                height: "98.5%",
-                border: "0px",
-                borderLeft: "1px solid grey",
-                backgroundColor: "transparent",
-              }}
-              value={
-                splitdata.length > 0
-                  ? splitdata
-                      .map((item) => `${item.address} ${item.amount}`)
-                      .join("\n")
-                  : inputValue
-              }
-              onChange={(e) => {
-                setShowText([]);
-                setSplitData([]);
-                setInputValue([]);
-                const text = e.target.value;
-                if (text.includes(",")) {
-                  // Replace commas with newlines
-                  const newText = text.replace(/,/g, "\n");
-                  setInputValue(newText.split("\n"));
-                } else {
-                  setInputValue(text.split("\n"));
-                }
-              }}
-            ></textarea>
+  cols={5}
+  style={{
+    width: "100%",
+    height: "98.5%",
+    border: "0px",
+    borderLeft: "1px solid grey",
+    backgroundColor: "transparent",
+    whiteSpace: "pre-wrap", // This preserves whitespace and wraps lines
+  }}
+  value={
+    splitdata.length > 0
+      ? splitdata
+          .map((item) => `${item.address} ${item.amount}`)
+          .join("\n")
+      : inputValue.join("\n") // Join inputValue with line breaks
+  }
+  onChange={(e) => {
+    const text = e.target.value;
+
+    // Check for both space and comma
+    if (text.includes(",")) {
+      // Replace commas with spaces and then split on spaces
+      const newText = text.replace(/,/g, "\n");
+      setInputValue(newText.split("\r\n"));
+    } else {
+      setInputValue(text.split("\n"));
+    }
+
+    // Clear other state variables
+    setShowText([]);
+    setSplitData([]);
+  }}
+></textarea>
+
           </div>
 
           <span style={{ color: "#7D7C7C", fontSize: "13px" }}>

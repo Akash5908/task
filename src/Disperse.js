@@ -20,10 +20,11 @@ const Disperse = () => {
   const [showbutton, setShowbutton] = useState(false);
 
   useEffect(() => {
-    const tempSplitData = inputValue.map((str) => {
+    const tempSplitData = inputValue.map((str, index) => {
       const [address, amount] = str.split(/[ ,=]/);
-      return { address, amount: amount };
+      return { address, amount: amount, line: index + 1 };
     });
+
 
     setSplitData(tempSplitData);
   }, [inputValue]);
@@ -66,8 +67,9 @@ const Disperse = () => {
     }
   };
 
-  const handleCombineBalances = () => {
+  const handleCombineBalances = (index) => {
     const combinedData = [];
+    let counter = 1
 
     for (let previous = 0; previous < splitdata.length; previous++) {
       for (let current = previous + 1; current < splitdata.length; current++) {
@@ -80,11 +82,11 @@ const Disperse = () => {
           current--; // Adjust the loop index since we removed an element
         }
       }
-
       // Push non-duplicate items to combinedData
       combinedData.push({
         address: splitdata[previous].address,
         amount: splitdata[previous].amount,
+        line:counter++, // Include the line index
       });
     }
     setShowbutton(false);
@@ -92,6 +94,7 @@ const Disperse = () => {
   };
   const KeepFirstOne = () => {
     const filteredData = [];
+    let counter = 1
     for (let previous = 0; previous < splitdata.length; previous++) {
       for (let current = previous + 1; current < splitdata.length; current++) {
         if (splitdata[previous].address === splitdata[current].address) {
@@ -104,6 +107,7 @@ const Disperse = () => {
       filteredData.push({
         address: splitdata[previous].address,
         amount: splitdata[previous].amount,
+        line:counter++, // Include the line index
       });
     }
     setShowbutton(false);
@@ -139,9 +143,9 @@ const Disperse = () => {
             value={
               splitdata.length > 0
                 ? splitdata
-                    .map((item) => `${item.address} ${item.amount}`)
+                    .map((item) => `${item.line}) ${item.address} ${item.amount}`)
                     .join("\n")
-                : inputValue.join("\n")
+                : inputValue
             }
             onChange={(e) => setInputValue(e.target.value.split("\n"))}
           ></textarea>

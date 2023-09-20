@@ -1,23 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-const address = [
-  "0x2CB99F193549681e06C6770dDD5543812B4FaFE8=1",
-  "0x8B3392483BA26D65E331dB86D4F430E9B3814E5e 50",
-  "0xEb0D38c92deB969b689acA94D962A07515CC5204=2",
-  "0xF4aDE8368DDd835B70b625CF7E3E1Bc5791D18C1=10",
-  "0x09ae5A64465c18718a46b3aD946270BD3E5e6aaB,13",
-  "0x2CB99F193549681e06C6770dDD5543812B4FaFE8=1",
-  "0x8B3392483BA26D65E331dB86D4F430E9B3814E5e 50",
-  "0x09ae5A64465c18718a46b3aD946270BD3E5e6aaB,13",
-  "0x2CB99F193549681e06C6770dDD5543812B4FaFE8=1",
-];
-
 const Disperse = () => {
-  const [inputValue, setInputValue] = useState(address);
+  const [inputValue, setInputValue] = useState([]);
   const [error, setError] = useState(null);
   const [showerror, setshowError] = useState(false);
   const [splitdata, setSplitData] = useState([]);
   const [showbutton, setShowbutton] = useState(false);
+  const [showtext, setShowText] = useState([]);
 
   useEffect(() => {
     const tempSplitData = inputValue.map((str, index) => {
@@ -25,15 +14,22 @@ const Disperse = () => {
       return { address, amount: amount, line: index + 1 };
     });
 
-    setSplitData(tempSplitData);
+    setShowText(tempSplitData);
+
+  
   }, [inputValue]);
 
   const onSumbit = () => {
+    setshowError(true);
+
     const errors = [];
     const duplicateMap = new Map();
 
     for (let previous = 0; previous < splitdata.length; previous++) {
-      if (isNaN(splitdata[previous].amount)) {
+      if (
+        !isNaN(splitdata[previous].amount || splitdata[previous].amount === "")
+      ) {
+      } else {
         errors.push(`Line ${previous + 1} wrong amount`);
       }
 
@@ -136,20 +132,52 @@ const Disperse = () => {
         <div style={{ width: "50%", height: "50%", padding: "3vw" }}>
           <h4>Addresses with Amounts</h4>
 
-          <textarea
-            cols={5}
-            style={{ width: "100%", height: "80%", display: "block" }}
-            value={
-              splitdata.length > 0
-                ? splitdata
-                    .map(
-                      (item) => `${item.line}) ${item.address} ${item.amount}`
-                    )
-                    .join("\n")
-                : inputValue
-            }
-            onChange={(e) => setInputValue(e.target.value.split("\n"))}
-          ></textarea>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "auto 1fr",
+              gap: "10px",
+              height: "80%",
+              backgroundColor: "#FFCCFF",
+            }}
+          >
+            <span style={{ fontSize: "13px" }}>
+              {splitdata.map((item) => (
+                <div key={item.line}>{item.line}</div>
+              ))}
+            </span>
+            <textarea
+              cols={5}
+              style={{
+                width: "100%",
+                height: "98.5%",
+                border: "0px",
+                borderLeft: "1px solid grey",
+                backgroundColor: "transparent",
+              }}
+              value={
+                splitdata.length > 0
+                  ? splitdata
+                      .map((item) => `${item.address} ${item.amount}`)
+                      .join("\n")
+                  : inputValue
+              }
+              onChange={(e) => {
+                setShowText([]);
+                setSplitData([]);
+                setInputValue([]);
+                const text = e.target.value;
+                if (text.includes(",")) {
+                  // Replace commas with newlines
+                  const newText = text.replace(/,/g, "\n");
+                  setInputValue(newText.split("\n"));
+                } else {
+                  setInputValue(text.split("\n"));
+                }
+              }}
+            ></textarea>
+          </div>
+
           <span style={{ color: "#7D7C7C", fontSize: "13px" }}>
             Separated by ','or' 'or'='
           </span>
@@ -231,7 +259,10 @@ const Disperse = () => {
               color: "white",
               marginLeft: "3px",
             }}
-            onClick={onSumbit}
+            onClick={() => {
+              setSplitData(showtext);
+              onSumbit();
+            }}
           >
             Next
           </button>

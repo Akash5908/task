@@ -7,19 +7,18 @@ const Disperse = () => {
   const [splitdata, setSplitData] = useState([]);
   const [showbutton, setShowbutton] = useState(false);
 
-
   useEffect(() => {
     const tempSplitData = inputValue.map((str, index) => {
       const [address, amount] = str.split(/[ ,=]/);
       return { address, amount: amount, line: index + 1 };
-    }); 
+    });
     const timer = setTimeout(() => {
-        setSplitData(tempSplitData);
-      }, 1000);
-    
-      // Cleanup the timer to avoid memory leaks
-      return () => clearTimeout(timer);
-    }, [inputValue]);
+      setSplitData(tempSplitData);
+    }, 1000);
+
+    // Cleanup the timer to avoid memory leaks
+    return () => clearTimeout(timer);
+  }, [inputValue]);
 
   const onSumbit = () => {
     setshowError(true);

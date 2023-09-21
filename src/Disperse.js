@@ -12,8 +12,10 @@ const Disperse = () => {
       const [address, amount] = str.split(/[ ,=]/);
       return { address, amount: amount, line: index + 1 };
     });
+
     const timer = setTimeout(() => {
       setSplitData(tempSplitData);
+      console.log(splitdata)
     }, 1000);
 
     // Cleanup the timer to avoid memory leaks
@@ -163,11 +165,12 @@ const Disperse = () => {
                 whiteSpace: "pre-wrap", // This preserves whitespace and wraps lines
               }}
               value={
-                splitdata.length > 0 
-                  ? splitdata
-                      .map((item) => `${item.address} ${item.amount}`)
-                      .join("\n")
+                  splitdata.length > 0
+                   ?splitdata
+                  .map((item) => `${item.address === "" ? "" : item.address  } ${item.amount === undefined ? "" : item.address}`)
+                  .join("\n")
                   : inputValue.join("\n") // Join inputValue with line breaks
+                
               }
               onChange={(e) => {
                 const text = e.target.value;

@@ -167,7 +167,7 @@ const Disperse = () => {
               value={
                   splitdata.length > 0
                    ?splitdata
-                  .map((item) => `${item.address === "" ? "" : item.address  } ${item.amount === undefined ? "" : item.address}`)
+                  .map((item) => `${item.address === "" ? "" : item.address  } ${item.amount === undefined ? "" : item.amount}`)
                   .join("\n")
                   : inputValue.join("\n") // Join inputValue with line breaks
                 

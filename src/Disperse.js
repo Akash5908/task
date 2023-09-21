@@ -163,7 +163,7 @@ const Disperse = () => {
                 whiteSpace: "pre-wrap", // This preserves whitespace and wraps lines
               }}
               value={
-                splitdata.length > 0 && splitdata.amount !== undefined
+                splitdata.length > 0 
                   ? splitdata
                       .map((item) => `${item.address} ${item.amount}`)
                       .join("\n")

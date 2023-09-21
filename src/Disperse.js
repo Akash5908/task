@@ -6,18 +6,20 @@ const Disperse = () => {
   const [showerror, setshowError] = useState(false);
   const [splitdata, setSplitData] = useState([]);
   const [showbutton, setShowbutton] = useState(false);
-  const [showtext, setShowText] = useState([]);
+
 
   useEffect(() => {
     const tempSplitData = inputValue.map((str, index) => {
       const [address, amount] = str.split(/[ ,=]/);
       return { address, amount: amount, line: index + 1 };
-    });
-
-    setShowText(tempSplitData);
-
-  
-  }, [inputValue]);
+    }); 
+    const timer = setTimeout(() => {
+        setSplitData(tempSplitData);
+      }, 1000);
+    
+      // Cleanup the timer to avoid memory leaks
+      return () => clearTimeout(timer);
+    }, [inputValue]);
 
   const onSumbit = () => {
     setshowError(true);
@@ -141,46 +143,39 @@ const Disperse = () => {
               backgroundColor: "#FFCCFF",
             }}
           >
-            <span style={{ fontSize: "13px"}}>
+            <span style={{ fontSize: "13px" }}>
               {splitdata.map((item) => (
-                <div key={item.line} style={{marginbottom:"-10px", marginTop:"-0.8px"}}>{item.line}</div>
+                <div
+                  key={item.line}
+                  style={{ marginbottom: "-10px", marginTop: "-0.8px" }}
+                >
+                  {item.line}
+                </div>
               ))}
             </span>
             <textarea
-  cols={5}
-  style={{
-    width: "100%",
-    height: "98.5%",
-    border: "0px",
-    borderLeft: "1px solid grey",
-    backgroundColor: "transparent",
-    whiteSpace: "pre-wrap", // This preserves whitespace and wraps lines
-  }}
-  value={
-    splitdata.length > 0
-      ? splitdata
-          .map((item) => `${item.address} ${item.amount}`)
-          .join("\n")
-      : inputValue.join("\n") // Join inputValue with line breaks
-  }
-  onChange={(e) => {
-    const text = e.target.value;
-
-    // Check for both space and comma
-    // if (text.includes(",")) {
-    //   // Replace commas with spaces and then split on spaces
-    //   const newText = text.replace(/,/g, "\n");
-    //   setInputValue(newText.split("\r\n"));
-    // } else {
-      setInputValue(text.split("\n"));
-    // }
-
-    // Clear other state variables
-    setShowText([]);
-    setSplitData([]);
-  }}
-></textarea>
-
+              cols={5}
+              style={{
+                width: "100%",
+                height: "98.5%",
+                border: "0px",
+                borderLeft: "1px solid grey",
+                backgroundColor: "transparent",
+                whiteSpace: "pre-wrap", // This preserves whitespace and wraps lines
+              }}
+              value={
+                splitdata.length > 0 && splitdata.amount !== undefined
+                  ? splitdata
+                      .map((item) => `${item.address} ${item.amount}`)
+                      .join("\n")
+                  : inputValue.join("\n") // Join inputValue with line breaks
+              }
+              onChange={(e) => {
+                const text = e.target.value;
+                setInputValue(text.split("\n"));
+                setSplitData([]);
+              }}
+            ></textarea>
           </div>
 
           <span style={{ color: "#7D7C7C", fontSize: "13px" }}>
@@ -265,7 +260,6 @@ const Disperse = () => {
               marginLeft: "3px",
             }}
             onClick={() => {
-              setSplitData(showtext);
               onSumbit();
             }}
           >

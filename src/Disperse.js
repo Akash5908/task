@@ -141,9 +141,9 @@ const Disperse = () => {
               backgroundColor: "#FFCCFF",
             }}
           >
-            <span style={{ fontSize: "13px" }}>
+            <span style={{ fontSize: "13px"}}>
               {splitdata.map((item) => (
-                <div key={item.line}>{item.line}</div>
+                <div key={item.line} style={{marginbottom:"-10px", marginTop:"-0.8px"}}>{item.line}</div>
               ))}
             </span>
             <textarea
@@ -167,13 +167,13 @@ const Disperse = () => {
     const text = e.target.value;
 
     // Check for both space and comma
-    if (text.includes(",")) {
-      // Replace commas with spaces and then split on spaces
-      const newText = text.replace(/,/g, "\n");
-      setInputValue(newText.split("\r\n"));
-    } else {
+    // if (text.includes(",")) {
+    //   // Replace commas with spaces and then split on spaces
+    //   const newText = text.replace(/,/g, "\n");
+    //   setInputValue(newText.split("\r\n"));
+    // } else {
       setInputValue(text.split("\n"));
-    }
+    // }
 
     // Clear other state variables
     setShowText([]);
